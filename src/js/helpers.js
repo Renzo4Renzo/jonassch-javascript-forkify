@@ -16,10 +16,10 @@ export const getJSON = async function (url) {
       fetch(url),
       timeout(TIMEOUT_SECONDS),
     ]);
-    const recipeData = await rawResponse.json();
+    const data = await rawResponse.json();
     if (!rawResponse.ok)
-      throw new Error(`${recipeData.message} (${rawResponse.status})`);
-    return recipeData;
+      throw new Error(`${data.message} (${rawResponse.status})`);
+    return data;
   } catch (error) {
     throw error;
   }
