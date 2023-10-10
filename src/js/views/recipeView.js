@@ -22,7 +22,7 @@ class RecipeView {
             <use href="${icons}#icon-loader"></use>
           </svg>
         </div>`;
-    this._clearElement;
+    this.#clearElement();
     this.#parentElement.insertAdjacentHTML('afterbegin', spinnerContent);
   }
 
