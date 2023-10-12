@@ -4,6 +4,11 @@
 import * as model from './model';
 import recipeView from './views/recipeView';
 import searchView from './views/searchView';
+import resultsView from './views/resultsView';
+
+// if (module.hot) {
+//   module.hot.accept();
+// }
 
 const controlRecipes = async function () {
   try {
@@ -23,11 +28,15 @@ const controlRecipes = async function () {
 const controlSearchResults = async function () {
   try {
     const searchQuery = searchView.getQuery();
-    if (!searchQuery) return;
+    if (!searchQuery) throw new Error();
+
+    resultsView.renderSpinner();
 
     await model.loadSearchResults(searchQuery);
+
+    resultsView.render(model.state.search.results);
   } catch (error) {
-    console.log(error);
+    resultsView.renderError();
   }
 };
 
