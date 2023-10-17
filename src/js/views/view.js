@@ -17,9 +17,9 @@ export default class View {
     const markup = this._generateMarkup();
 
     const newDOM = document.createRange().createContextualFragment(markup);
-    const newElements = Array.from(newDOM.querySelectorAll('*'));
+    const newElements = Array.from(newDOM.querySelectorAll('.updatable'));
     const currentElements = Array.from(
-      this._parentElement.querySelectorAll('*')
+      this._parentElement.querySelectorAll('.updatable')
     );
 
     newElements.forEach((newElement, index) => {

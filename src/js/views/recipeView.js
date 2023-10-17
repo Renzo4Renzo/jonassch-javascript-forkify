@@ -47,20 +47,20 @@ class RecipeView extends View {
             <svg class="recipe__info-icon">
               <use href="${icons}#icon-users"></use>
             </svg>
-            <span class="recipe__info-data recipe__info-data--people">${
+            <span class="recipe__info-data recipe__info-data--people updatable">${
               this._data.servings
             }</span>
             <span class="recipe__info-text">servings</span>
 
             <div class="recipe__info-buttons">
-              <button class="btn--tiny btn--update-servings" data-new-servings=${
+              <button class="btn--tiny btn--update-servings updatable" data-new-servings=${
                 this._data.servings > 1 ? this._data.servings - 1 : 1
               }>
                 <svg>
                   <use href="${icons}#icon-minus-circle"></use>
                 </svg>
               </button>
-              <button class="btn--tiny btn--update-servings" data-new-servings=${
+              <button class="btn--tiny btn--update-servings updatable" data-new-servings=${
                 this._data.servings + 1
               }>
                 <svg>
@@ -116,7 +116,7 @@ class RecipeView extends View {
                 <svg class="recipe__icon">
                   <use href="${icons}#icon-check"></use>
                 </svg>
-                <div class="recipe__quantity">${
+                <div class="recipe__quantity updatable">${
                   ingredient.quantity
                     ? new Fraction(ingredient.quantity).toFraction(true)
                     : ''
