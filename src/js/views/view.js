@@ -4,8 +4,7 @@ export default class View {
   _data;
 
   render(data) {
-    if (!data || (Array.isArray(data) && data.length === 0))
-      return this.renderError();
+    if (!data || (Array.isArray(data) && data.length === 0)) return this.renderError();
     this._data = data;
     const markup = this._generateMarkup();
     this._clearElement();
@@ -18,12 +17,11 @@ export default class View {
 
     const newDOM = document.createRange().createContextualFragment(markup);
     const newElements = Array.from(newDOM.querySelectorAll('.updatable'));
-    const currentElements = Array.from(
-      this._parentElement.querySelectorAll('.updatable')
-    );
+    const currentElements = Array.from(this._parentElement.querySelectorAll('.updatable'));
 
     newElements.forEach((newElement, index) => {
       const currentElement = currentElements[index];
+
       if (!newElement.isEqualNode(currentElement)) {
         if (newElement.firstChild?.nodeValue.trim() !== '') {
           currentElement.textContent = newElement.textContent;
