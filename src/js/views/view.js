@@ -3,12 +3,21 @@ import icons from 'url:../../img/icons.svg';
 export default class View {
   _data;
 
-  render(data) {
-    if (!data || (Array.isArray(data) && data.length === 0)) return this.renderError();
+  _validateData(data) {
+    if (!data || (Array.isArray(data) && data.length === 0)) throw new Error('Invalid data!');
     this._data = data;
+  }
+
+  render(data) {
+    this._validateData(data);
     const markup = this._generateMarkup();
     this._clearElement();
     this._parentElement.insertAdjacentHTML('afterbegin', markup);
+  }
+
+  createMarkup(data) {
+    this._validateData(data);
+    return this._generateMarkup();
   }
 
   update(data) {
