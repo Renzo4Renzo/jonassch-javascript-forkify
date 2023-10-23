@@ -1,6 +1,6 @@
 // import 'regenerator-runtime/runtime';
-import { API_URL, RESULTS_PER_PAGE } from './config';
-import { getJSON } from './helpers';
+import { API_URL, API_KEY, RESULTS_PER_PAGE } from './config';
+import { getJSON, postJSON } from './helpers';
 
 export const state = {
   recipe: {},
@@ -13,23 +13,27 @@ export const state = {
   bookmarks: [],
 };
 
+const createRecipeObject = function (recipeData) {
+  const {
+    data: { recipe },
+  } = recipeData;
+  return {
+    id: recipe.id,
+    title: recipe.title,
+    publisher: recipe.publisher,
+    sourceUrl: recipe.source_url,
+    image: recipe.image_url,
+    servings: recipe.servings,
+    cookingTime: recipe.cooking_time,
+    ingredients: recipe.ingredients,
+    ...(recipe.key && { key: recipe.key }),
+  };
+};
+
 export const loadRecipe = async function (recipeId) {
   try {
     const recipeData = await getJSON(`${API_URL}${recipeId}`);
-
-    const {
-      data: { recipe },
-    } = recipeData;
-    state.recipe = {
-      id: recipe.id,
-      title: recipe.title,
-      publisher: recipe.publisher,
-      sourceUrl: recipe.source_url,
-      image: recipe.image_url,
-      servings: recipe.servings,
-      cookingTime: recipe.cooking_time,
-      ingredients: recipe.ingredients,
-    };
+    state.recipe = createRecipeObject(recipeData);
     state.recipe.bookmarked = state.bookmarks.some(bookmark => bookmark.id === recipeId) ? true : false;
   } catch (error) {
     console.error(error.message);
@@ -92,6 +96,38 @@ export const deleteBookmark = function (recipeId) {
   state.bookmarks.splice(index, 1);
   state.recipe.bookmarked = false;
   persistBookmarks();
+};
+
+export const uploadRecipe = async function (newRecipe) {
+  try {
+    const ingredients = newRecipe
+      .filter(entry => entry[0].startsWith('ingredient') && entry[1] !== '')
+      .map(ingredient => {
+        const ingredientArray = ingredient[1].replaceAll(' ', '').split(',');
+        if (ingredientArray.length !== 3) {
+          throw new Error('Wrong ingredient format! Please use the correct format!');
+        }
+        const [quantity, unit, description] = ingredientArray;
+        return { quantity: quantity ? Number(quantity) : null, unit, description };
+      });
+
+    const newRecipeObject = Object.fromEntries(newRecipe);
+    const recipe = {
+      title: newRecipeObject.title,
+      source_url: newRecipeObject.sourceUrl,
+      image_url: newRecipeObject.image,
+      publisher: newRecipeObject.publisher,
+      cooking_time: Number(newRecipeObject.cookingTime),
+      servings: Number(newRecipeObject.servings),
+      ingredients,
+    };
+
+    const responseData = await postJSON(`${API_URL}?key=${API_KEY}`, recipe);
+    state.recipe = createRecipeObject(responseData);
+    addBookmark(state.recipe);
+  } catch (error) {
+    throw error;
+  }
 };
 
 const init = function () {
