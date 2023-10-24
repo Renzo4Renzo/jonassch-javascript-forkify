@@ -2,6 +2,7 @@
   "name": "jonassch-javascript-forkify",
   "version": "1.0.0",
   "description": "",
+  "default": "index.html",
   "scripts": {
     "start": "parcel index.html",
     "restart": "parcel index.html --no-cache",
