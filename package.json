@@ -5,7 +5,7 @@
   "scripts": {
     "start": "parcel index.html",
     "restart": "parcel index.html --no-cache",
-    "build": "parcel build index.html"
+    "build": "parcel build index.html --dist-dir ./dist"
   },
   "keywords": [],
   "author": "Renzo Diaz",
@@ -15,8 +15,6 @@
     "parcel": "^2.9.3"
   },
   "dependencies": {
-    "core-js": "^3.33.0",
-    "fraction.js": "^4.3.6",
-    "regenerator-runtime": "^0.14.0"
+    "fraction.js": "^4.3.6"
   }
 }
