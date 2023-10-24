@@ -1,6 +1,3 @@
-// import 'core-js/stable';
-// import 'regenerator-runtime/runtime';
-
 import * as model from './model';
 import recipeView from './views/recipeView';
 import searchView from './views/searchView';
@@ -9,11 +6,7 @@ import bookmarksView from './views/bookmarksView';
 import paginationView from './views/paginationView';
 import addRecipeView from './views/addRecipeView';
 
-import { CLOSE_MODAL_SECONDS } from './config';
-
-// if (module.hot) {
-//   module.hot.accept();
-// }
+import { CLOSE_MODAL_SECONDS, UPDATE_MODAL_SECONDS } from './config';
 
 const controlRecipes = async function () {
   try {
@@ -80,11 +73,20 @@ const controlAddRecipe = async function (newRecipe) {
     recipeView.render(model.state.recipe);
     addRecipeView.renderMessage();
 
-    setTimeout(() => {
-      addRecipeView.toggleWindow();
-    }, CLOSE_MODAL_SECONDS * 1000);
+    bookmarksView.render(model.state.bookmarks);
+    window.history.pushState(null, '', `#${model.state.recipe.id}`);
+
+    await new Promise(resolve => {
+      setTimeout(() => {
+        addRecipeView.toggleWindow();
+        resolve();
+      }, CLOSE_MODAL_SECONDS * 1000);
+    });
   } catch (error) {
     addRecipeView.renderError(error.message);
+    await new Promise(resolve => setTimeout(resolve, UPDATE_MODAL_SECONDS * 1000));
+  } finally {
+    addRecipeView.render(model.state.recipe);
   }
 };
 
