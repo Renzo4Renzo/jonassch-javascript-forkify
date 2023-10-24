@@ -8,6 +8,13 @@ export default class View {
     this._data = data;
   }
 
+  /**
+   * Render the received object to the DOM
+   * @param {Object | Object[]} data The data to be rendered
+   * @returns {undefined}
+   * @this {Object} View instance
+   * @author Renzo Diaz
+   */
   render(data) {
     this._validateData(data);
     const markup = this._generateMarkup();
@@ -69,6 +76,11 @@ export default class View {
     this._parentElement.insertAdjacentHTML('afterbegin', errorMarkup);
   }
 
+  /**
+   * Render the message provided
+   * @param {string} [message=this._successMessage] If not provided, render a successful default message provided in the child
+   * @returns {undefined}
+   */
   renderMessage(message = this._successMessage) {
     const messageMarkup = `<div class="message">
         <div>
